@@ -1,30 +1,62 @@
-apiVersion: batch/v1                    #এই YAML-টি Kubernetes-এর batch/v1 API Group ব্যবহার করছ যেটা Job resource তৈরি করতে ব্যবহৃত হয়।
-kind: Job                                       #এটা একটি Job। অর্থাৎ একবার রান করে শেষ হবে এমন কাজ (one-time task), যেটা ব্যাকগ্রাউন্ডে শেষ
+# apiVersion: batch/v1                    #এই YAML-টি Kubernetes-এর batch/v1 API Group ব্যবহার করছ যেটা Job resource তৈরি করতে ব্যবহৃত হয়।
+# kind: Job                                       #এটা একটি Job। অর্থাৎ একবার রান করে শেষ হবে এমন কাজ (one-time task), যেটা ব্যাকগ্রাউন্ডে শেষ
+# metadata:
+#   generateName: mattermost-post-job-failure-
+#   annotations:
+#     argocd.argoproj.io/hook: SyncFail
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - name: mattermost-failure              #এখানে একটি কনটেইনার তৈরি হচ্ছে যার নাম mattermost-failure
+#           image: nuruzzaman24x/mattermost:latest             #এটি mattermost:final নামের Docker image ব্যবহার করছে।
+#           command: [ "python3", "mattermost_api.py"]    #কনটেইনার চালু হলে Python দিয়ে mattermost_api.py স্ক্রিপ্ট রান করাবে
+#           env:
+#           - name: message                       #তুমি কী বার্তা পাঠাবে Matterm এখানে Sync Failed বার্তা আছে
+#             value: "MESSAGE FROM ARGOCD: The last sync is:  *** Sync Failed ***"
+#           - name: url
+#             value: "172.17.0.232"               #Mattermost server-এর IP address
+#           - name: token
+#             value: "cz9tyde1iirmtcbi319esbfbce"     #Mattermost bot/token — তুমি Mattermost UI থেকে generate করে দিবে।
+#           - name: scheme
+#             value: "http"                                       #HTTP প্রোটোকল ব্যবহার করবে
+#           - name: port
+#             value: "8065"                                       #Mattermost এর ডিফল্ট পোর্ট
+#           - name: channel_name
+#             value: "argocd-alert"                                     #যে চ্যানেলে মেসে argocd নামে।
+#           - name: team_name
+#             value: "digicon-devops"                            #Mattermost-এ যেই টিমে মেসেজ সেটি হলো digicon
+#       restartPolicy: Never                                      #এই Job একবার চলবে, fail করলেও পুনরায় চালাবে না।
+#   backoffLimit: 0
+
+
+apiVersion: batch/v1
+kind: Job
 metadata:
-  generateName: mattermost-post-job-failure-
+  name: mattermost-post-job-failure
   annotations:
     argocd.argoproj.io/hook: SyncFail
 spec:
   template:
     spec:
       containers:
-        - name: mattermost-failure              #এখানে একটি কনটেইনার তৈরি হচ্ছে যার নাম mattermost-failure
-          image: nuruzzaman24x/mattermost:latest             #এটি mattermost:final নামের Docker image ব্যবহার করছে।
-          command: [ "python3", "mattermost_api.py"]    #কনটেইনার চালু হলে Python দিয়ে mattermost_api.py স্ক্রিপ্ট রান করাবে
+        - name: mattermost-failure
+          image: mattermost:final
+          command: [ "python3", "mattermost_api.py"]
           env:
-          - name: message                       #তুমি কী বার্তা পাঠাবে Matterm এখানে Sync Failed বার্তা আছে
+          - name: message
             value: "MESSAGE FROM ARGOCD: The last sync is:  *** Sync Failed ***"
           - name: url
-            value: "172.17.0.232"               #Mattermost server-এর IP address
+            value: "mattermost.local"
           - name: token
-            value: "cz9tyde1iirmtcbi319esbfbce"     #Mattermost bot/token — তুমি Mattermost UI থেকে generate করে দিবে।
+            value: "1mh8r35js7dhpcswb4mpnkwpcw"
           - name: scheme
-            value: "http"                                       #HTTP প্রোটোকল ব্যবহার করবে
+            value: "http"
           - name: port
-            value: "8065"                                       #Mattermost এর ডিফল্ট পোর্ট
+            value: "8065"
           - name: channel_name
-            value: "argocd-alert"                                     #যে চ্যানেলে মেসে argocd নামে।
+            value: "argocd-course"
           - name: team_name
-            value: "digicon-devops"                            #Mattermost-এ যেই টিমে মেসেজ সেটি হলো digicon
-      restartPolicy: Never                                      #এই Job একবার চলবে, fail করলেও পুনরায় চালাবে না।
+            value: "DevOps-Hobbies"
+      restartPolicy: Never
   backoffLimit: 0
