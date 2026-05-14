@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: mattermost-success
-          image: mattermost:final
+          image: nuruzzaman24x/mattermost:latest
           command: [ "python3", "mattermost_api.py"]
           env:
           - name: message
