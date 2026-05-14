@@ -47,7 +47,7 @@ spec:
           - name: message
             value: "MESSAGE FROM ARGOCD: The last sync is:  *** Sync Failed ***"
           - name: url
-            value: "mattermost.local"
+            value: "172.17.0.232"
           - name: token
             value: "1mh8r35js7dhpcswb4mpnkwpcw"
           - name: scheme
