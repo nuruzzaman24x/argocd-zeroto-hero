@@ -47,7 +47,7 @@ metadata:
   name: health-check-pre-job
   annotations:
     argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded      ## newly added ##
+    argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
   template:
     spec:
