@@ -45,9 +45,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: health-check-pre-job
-  annotations:
-    argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookFailed
+  # annotations:
+  #   argocd.argoproj.io/hook: PreSync
+  #   argocd.argoproj.io/hook-delete-policy: HookFailed
 spec:
   template:
     spec:
