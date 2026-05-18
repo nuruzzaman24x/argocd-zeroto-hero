@@ -29,6 +29,41 @@
 #       restartPolicy: Never                                      #এই Job একবার চলবে, fail করলেও পুনরায় চালাবে না।
 #   backoffLimit: 0
 
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: mattermost-post-job-success
+#   annotations:
+#     argocd.argoproj.io/hook: PostSync
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - name: mattermost-success
+#           image: nuruzzaman24x/mattermost:latest
+#           command: [ "python3", "mattermost_api.py"]
+#           env:
+#           - name: message
+#             value: "MESSAGE FROM ARGOCD: The last sync is:  *** Sync OK ***"
+#           - name: url
+#             value: "172.17.0.232"
+#           - name: token
+#             value: "oi5whc5irbgtdfyy7nfcijhb6c"
+#           - name: scheme
+#             value: "http"
+#           - name: port
+#             value: "8065"
+#           - name: channel_name
+#             value: "argocd-course"
+#           - name: team_name
+#             value: "DevOps-Hobbies"
+#       restartPolicy: Never
+#   backoffLimit: 0
+
+
+
+
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -48,7 +83,7 @@ spec:
           - name: url
             value: "172.17.0.232"
           - name: token
-            value: "oi5whc5irbgtdfyy7nfcijhb6c"
+            value: "i4mcucfmridzteg7xcqgoohc6h"
           - name: scheme
             value: "http"
           - name: port
@@ -56,6 +91,6 @@ spec:
           - name: channel_name
             value: "argocd-course"
           - name: team_name
-            value: "DevOps-Hobbies"
+            value: "devops-bangla"
       restartPolicy: Never
   backoffLimit: 0
