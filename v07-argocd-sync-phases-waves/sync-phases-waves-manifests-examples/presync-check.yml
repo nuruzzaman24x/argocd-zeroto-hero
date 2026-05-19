@@ -56,13 +56,34 @@
 
 
 
-########### after new API configure ############
+# ########### after new API configure ############
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: health-check-pre-job
+#   annotations:
+#     argocd.argoproj.io/hook: PreSync
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - name: health-check
+#           image: curlimages/curl
+#           command: ["/bin/sh", "-c"]
+#           args: ["if curl -s http://172.17.0.232:5000 | grep -qi 'running'; then echo 'Flash Application is up and Running'; exit 0; else echo 'Flask Application is NOT accessible'; exit 1; fi"]
+#       restartPolicy: Never
+#   backoffLimit: 0
+
+
+
+########### after HOOK added ############
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: health-check-pre-job
   annotations:
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
