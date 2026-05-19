@@ -28,9 +28,6 @@
 #       restartPolicy: Never
 #   backoffLimit: 0
 
-
-
-
 ########### after add annotations ##################
 apiVersion: batch/v1
 kind: Job
