@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mattermost-post-job-success
+  name: notify-success
 spec:
   template:
     spec:
@@ -34,7 +34,7 @@ spec:
 # apiVersion: batch/v1
 # kind: Job
 # metadata:
-#   name: mattermost-post-job-success
+#   name: notify-success
 #   annotations:
 #     argocd.argoproj.io/hook: PostSync
 # spec:
