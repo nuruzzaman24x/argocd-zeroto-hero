@@ -1,42 +1,8 @@
-########## this is template files, we need to add annotation later ##########
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: notify-success
-spec:
-  template:
-    spec:
-      containers:
-        - name: mattermost-success
-          image: nuruzzaman24x/mattermost:latest
-          command: [ "python3", "mattermost_api.py"]
-          env:
-          - name: message
-            value: "MESSAGE FROM ARGOCD: The last sync is:  *** Sync OK ***"
-          - name: url
-            value: "172.17.0.232"
-          - name: token
-            value: "i4mcucfmridzteg7xcqgoohc6h"
-          - name: scheme
-            value: "http"
-          - name: port
-            value: "8065"
-          - name: channel_name
-            value: "argocd-course"
-          - name: team_name
-            value: "devops-bangla"
-      restartPolicy: Never
-  backoffLimit: 0
-
-
-
-######## after add annotations #########
+# ########## this is template files, we need to add annotation later ##########
 # apiVersion: batch/v1
 # kind: Job
 # metadata:
 #   name: notify-success
-#   annotations:
-#     argocd.argoproj.io/hook: PostSync
 # spec:
 #   template:
 #     spec:
@@ -61,3 +27,37 @@ spec:
 #             value: "devops-bangla"
 #       restartPolicy: Never
 #   backoffLimit: 0
+
+
+
+####### after add annotations #########
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: notify-success
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  template:
+    spec:
+      containers:
+        - name: mattermost-success
+          image: nuruzzaman24x/mattermost:latest
+          command: [ "python3", "mattermost_api.py"]
+          env:
+          - name: message
+            value: "MESSAGE FROM ARGOCD: The last sync is:  *** Sync OK ***"
+          - name: url
+            value: "172.17.0.232"
+          - name: token
+            value: "i4mcucfmridzteg7xcqgoohc6h"
+          - name: scheme
+            value: "http"
+          - name: port
+            value: "8065"
+          - name: channel_name
+            value: "argocd-course"
+          - name: team_name
+            value: "devops-bangla"
+      restartPolicy: Never
+  backoffLimit: 0
