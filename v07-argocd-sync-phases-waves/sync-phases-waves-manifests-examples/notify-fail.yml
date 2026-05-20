@@ -56,6 +56,6 @@ spec:
           - name: channel_name
             value: "argocd-course"
           - name: team_name
-            value: "devops-bangla"
+            value: "DevOps-Bangla"
       restartPolicy: Never
   backoffLimit: 0
