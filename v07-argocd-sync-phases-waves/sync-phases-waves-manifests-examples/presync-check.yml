@@ -83,7 +83,7 @@ metadata:
   name: presync-check
   annotations:
     argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookFailed
+    argocd.argoproj.io/hook-delete-policy: HookFailed   ### onek job jome jeno cluster dirty hoy na jay tar jonno use kore ##
 spec:
   template:
     spec:
