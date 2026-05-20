@@ -50,7 +50,7 @@ spec:
           - name: url
             value: "172.17.0.232"
           - name: token
-            value: "i4mcucfmridzteg7xcqgoohc6h"
+            value: "eed6r86az7gy8qottcgj3nn8fe"
           - name: scheme
             value: "http"
           - name: port
