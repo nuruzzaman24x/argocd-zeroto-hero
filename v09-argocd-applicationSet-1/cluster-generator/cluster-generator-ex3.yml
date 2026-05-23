@@ -1,37 +1,51 @@
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+apiVersion: argoproj.io/v1alpha1		#ArgoCD-এর জন্য সঠিক API ভার্সন #
+kind: ApplicationSet # ArgoCD-তে একাধিক অ্যাপ্লিকেশন ম্যানেজ করতে সাহায্য করে ApplicationSet।
 metadata:
-  name: cluster-generator-ex3
-  namespace: argocd
-spec:
+  name: cluster-generator-ex3  # এই ApplicationSet-এর নাম
+  namespace: argocd            # এটি ArgoCD-এর argocd namespace-এ তৈরি হবে
+
+
+spec:  # Cluster Selection 
   generators:
-  - clusters:
-      selector:
-        matchLabels:
-          environment: staging
-      values:
-        path: helm/nginx
-        namespace: staging-ns
-  - clusters:
-      selector:
-        matchLabels:
-          environment: pre-staging
-      values:
-        path: directoryOfmanifests
-        namespace: pre-staging-ns
-  template:
+    - clusters:
+        selector:
+          matchLabels:
+            environment: staging  #এই অংশটি এমন সব ক্লাস্টার বাছাই করবে, যেগুলোর label, environment=staging
+        values:
+          path: helm/nginx        # Staging environment-এর অ্যাপ্লিকেশন ডিপ্লয় হবে helm/nginx path থেকে
+          namespace: staging-ns    # Staging-এর জন্য অ্যাপটি staging-ns namespace-এ ডিপ্লয় হবে
+
+
+    - clusters:
+        selector:
+          matchLabels:
+            environment: pre-staging  # এই অংশটি environment=pre-staging label যুক্ত ক্লাস্টারগুলো বেছে নেবে
+        values:
+          path: directoryOfmanifests   # pre-staging এর জন্য আলাদা path থেকে ম্যানিফেস্ট ডিপ্লয় হবে
+          namespace: pre-staging-ns    # pre-staging ক্লাস্টারের জন্য নির্দিষ্ট namespace 
+
+
+  template:		# অ্যাপ্লিকেশন টেমপ্লেট #
     metadata:
-      name: '{{name}}-application'
-    spec:
-      project: "default"
-      source:
-        repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-        targetRevision: main
-        path: v03-argocd-applications/{{values.path}}
+      name: '{{name}}-application'  # প্রতিটি ক্লাস্টারের জন্য ডাইনামিকভাবে অ্যাপের নাম সেট করবে (যেমন: staging-application, pre-staging-application)
+
+
+    spec:  # Deployment Configuration part
       destination:
-        server: '{{server}}'
-        namespace: '{{values.namespace}}'
+        namespace: '{{values.namespace}}'  # আগে ডিফাইন করা values.namespace অনুসারে namespace সেট করবে।
+        server: '{{server}}'  # ক্লাস্টারের API সার্ভার URL ইনজেক্ট করবে
+
+
+      project: "default"  
+
+
+      source:  # অ্যাপ কোথা থেকে আসবে?
+        path: v03-argocd-applications/{{values.path}}  # cluster-specific path থেকে অ্যাপ আনবে
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git  # গিট রিপোজিটরি URL #
+        targetRevision: main  # main ব্রাঞ্চ থেকে কোড আনবে #
+
+
       syncPolicy:
-        automated: {}
+        automated: {}  # স্বয়ংক্রিয়ভাবে সিঙ্ক করবে
         syncOptions:
-          - CreateNamespace=true
+          - CreateNamespace=true  # namespace না থাকলে তৈরি করবে #
