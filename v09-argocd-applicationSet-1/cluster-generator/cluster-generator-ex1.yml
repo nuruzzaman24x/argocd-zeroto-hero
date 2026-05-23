@@ -1,24 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: ApplicationSet   #এটি ArgoCD-এর জন্য একটি ApplicationSet CRD (Custom Resource Definition) নির্দেশ করে#
 metadata:
   name: cluster-generator-ex1
   namespace: argocd
 spec:
-  generators:
-  - clusters: {}
+  generators:      #এটি একটি Cluster Generator ব্যবহার করে সব ক্লাস্টারের জন্য স্বয়ংক্রিয়ভাবে অ্যাপ তৈরি করবে।
+  - clusters: {}   #এটি ArgoCD-এর সাথে সংযুক্ত সব ক্লাস্টারের জন্য এই ApplicationSet প্রয়োগ করবে
   template:
     metadata:
-      name: '{{name}}-application'
+      name: '{{name}}-application'   #argocd cluster list kore je output pabo tar sathe -application add hobe#
     spec:
-      project: "default"
-      source:
-        repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-        targetRevision: main
-        path: v03-argocd-applications/helm/nginx
       destination:
-        server: '{{server}}'
-        namespace: cluster-generator
+        namespace: cluster-generator  	#অ্যাপ কোন namespace-এ ডিপ্লয় হবে।
+        server: '{{server}}'    		#এটি Cluster Generator থেকে ক্লাস্টারের API Server URL নিয়ে সেট করবে
+      project: default		  		# এই অ্যাপটি default নামে একটি ArgoCD প্রজেক্টের অংশ হবে
+      source:					#গিট রিপোজিটরি ও চার্ট লোকেশন
+        path: v03-argocd-applications/helm/nginx
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git
+        targetRevision: main
       syncPolicy:
-        automated: {}
+        automated: {}				#স্বয়ংক্রিয়ভাবে নতুন আপডেট সিঙ্ক করবে (মানুষের হস্তক্ষেপ লাগবে না)।
         syncOptions:
-          - CreateNamespace=true
+          - CreateNamespace=true		#যদি cluster-generator namespace না থাকে, তাহলে ArgoCD সেটি তৈরি করবে#
