@@ -8,20 +8,25 @@ spec:
   - clusters:
       selector:
         matchLabels:
-          argocd.argoproj.io/secret-type: cluster
-          environment: staging
+          argocd.argoproj.io/secret-type: cluster       #এটি নির্দেশ করে যে এটি একটি ক্লাস্টার সিক্রেট
+            #environment: staging   ##শুধুমাত্র "staging" নামে লেবেল করা ক্লাস্টারগুলোর জন্য অ্যাপ তৈরি হবে
+
   template:
     metadata:
-      name: '{{name}}-application'
+      name: "{{name}}-application"
+
     spec:
-      project: "default"
-      source:
-        repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-        targetRevision: main
-        path: v03-argocd-applications/helm/nginx
       destination:
-        server: '{{server}}'
         namespace: cluster-generator
+        server: "{{server}}"
+
+      project: default
+
+      source:
+        path: v03-argocd-applications/helm/nginx
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git
+        targetRevision: main
+
       syncPolicy:
         automated: {}
         syncOptions:
