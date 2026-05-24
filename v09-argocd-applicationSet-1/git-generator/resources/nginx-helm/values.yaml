@@ -2,4 +2,4 @@ replicaCount: 4
 
 serviceAccount:
   create: true
-  name: ""replicaCount: 4
+  name: ""
