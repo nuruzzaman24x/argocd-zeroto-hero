@@ -42,7 +42,7 @@ spec:
         directories:
           - path: v09-argocd-applicationSet-1/git-generator/resources/*
           - path: v09-argocd-applicationSet-1/git-generator/resources/nginx-manifests
-        repoURL: https://github.com/devopshobbies/argocd-zeroto-hero.git
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git
         revision: main
   template:
     metadata:
@@ -54,7 +54,7 @@ spec:
       project: default
       source:
         path: '{{path}}'
-        repoURL: https://github.com/devopshobbies/argocd-zeroto-hero.git
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git
         targetRevision: main
       syncPolicy:
         automated: {}
