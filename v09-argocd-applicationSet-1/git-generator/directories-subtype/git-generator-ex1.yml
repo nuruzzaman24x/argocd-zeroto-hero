@@ -1,28 +1,57 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: git-directories-generator-ex1
+#   namespace: argocd
+# spec:
+#   generators:
+#   - git:
+#       repoURL: https://github.com/devopshobbies/argocd-tutorial.git
+#       revision: main
+#       directories:
+#       - path: v09-argocd-applicationSet-1/git-generator/resources/*
+#   template:
+#     metadata:
+#       name: '{{path.basename}}-application'
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/devopshobbies/argocd-tutorial.git
+#         targetRevision: main
+#         path: '{{path}}'
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: '{{path.basename}}-ns'
+#       syncPolicy:
+#         automated: {}
+#         syncOptions:
+#           - CreateNamespace=true
+
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: git-directories-generator-ex1
-  namespace: argocd
+  name: git-directories-generator-ex1  # ApplicationSet-এর নাম
+  namespace: argocd                    # এটি ArgoCD-এর 'argocd' namespace-এ তৈরি হবে
 spec:
-  generators:
-  - git:
-      repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-      revision: main
-      directories:
-      - path: v09-argocd-applicationSet-1/git-generator/resources/*
-  template:
+  generators:                           # এখানে Git Generator ব্যবহার করা হয়েছে
+    - git:
+        directories:
+          - path: v09-argocd-applicationSet-1/git-generator/resources/*  # এই path-এর প্রতিটি সাবডিরেক্টরি থেকে অ্যাপ তৈরি হবে
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git    # Git রিপোজিটরির URL
+        revision: main                            # Git branch বা tag (এখানে 'main' ব্রাঞ্চ ব্যবহার করা হয়েছে)
+  template:                             # প্রতিটি অ্যাপ্লিকেশনের জন্য টেমপ্লেট
     metadata:
-      name: '{{path.basename}}-application'
+      name: '{{path.basename}}-application'  # Git ডিরেক্টরির নাম অনুযায়ী অ্যাপের নাম তৈরি হবে
     spec:
-      project: default
-      source:
-        repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-        targetRevision: main
-        path: '{{path}}'
       destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{path.basename}}-ns'
+        namespace: '{{path.basename}}-ns'    # Git ডিরেক্টরির নাম অনুযায়ী namespace তৈরি হবে
+        server: https://kubernetes.default.svc  # Kubernetes-এর 'default' cluster-এ ডিপ্লয় হবে
+      project: default  # এটি 'default' প্রোজেক্টের মধ্যে তৈরি হবে
+      source:
+        path: '{{path}}'   # উপরের Git রিপোজিটরি থেকে নির্দিষ্ট path-এর YAML ফাইল ব্যবহার করা হবে
+        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git  # রিপোজিটরি URL
+        targetRevision: main  # Git-এর 'main' branch ব্যবহার করা হবে
       syncPolicy:
-        automated: {}
+        automated: {}  # এটি স্বয়ংক্রিয়ভাবে সিঙ্ক হবে
         syncOptions:
-          - CreateNamespace=true
+          - CreateNamespace=true  # যদি namespace না থাকে, তাহলে এটি স্বয়ংক্রিয়ভাবে তৈরি করবে
