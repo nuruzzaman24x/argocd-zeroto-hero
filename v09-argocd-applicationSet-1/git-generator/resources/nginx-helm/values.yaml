@@ -1,4 +1,4 @@
-100ddireplicaCount: 4
+replicaCount: 4
 
 serviceAccount:
   create: true
