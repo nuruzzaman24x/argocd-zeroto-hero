@@ -1,3 +1,36 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: git-directories-generator-ex2
+#   namespace: argocd
+# spec:
+#   generators:
+#   - git:
+#       repoURL: https://github.com/devopshobbies/argocd-tutorial.git
+#       revision: main
+#       directories:
+#       - path: v09-argocd-applicationSet-1/git-generator/resources/*
+#       - path: v09-argocd-applicationSet-1/git-generator/resources/nginx-manifests
+#         exclude: true
+#   template:
+#     metadata:
+#       name: '{{path.basename}}-application'
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/devopshobbies/argocd-tutorial.git
+#         targetRevision: main
+#         path: '{{path}}'
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: '{{path.basename}}-ns'
+#       syncPolicy:
+#         automated: {}
+#         syncOptions:
+#           - CreateNamespace=true
+
+
+
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -5,25 +38,24 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - git:
-      repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-      revision: main
-      directories:
-      - path: v09-argocd-applicationSet-1/git-generator/resources/*
-      - path: v09-argocd-applicationSet-1/git-generator/resources/nginx-manifests
-        exclude: true
+    - git:
+        directories:
+          - path: v09-argocd-applicationSet-1/git-generator/resources/*
+          - path: v09-argocd-applicationSet-1/git-generator/resources/nginx-manifests
+        repoURL: https://github.com/devopshobbies/argocd-zeroto-hero.git
+        revision: main
   template:
     metadata:
       name: '{{path.basename}}-application'
     spec:
+      destination:
+        namespace: '{{path.basename}}-ns'
+        server: https://kubernetes.default.svc
       project: default
       source:
-        repoURL: https://github.com/devopshobbies/argocd-tutorial.git
-        targetRevision: main
         path: '{{path}}'
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: '{{path.basename}}-ns'
+        repoURL: https://github.com/devopshobbies/argocd-zeroto-hero.git
+        targetRevision: main
       syncPolicy:
         automated: {}
         syncOptions:
