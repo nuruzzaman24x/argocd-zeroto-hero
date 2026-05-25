@@ -1,28 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: git-directories-generator-ex2
-  namespace: argocd
-spec:
-  generators:
-    - git:
-        directories:
-          - path: v09-argocd-applicationSet-1/git-generator/resources/*
-          - path: v09-argocd-applicationSet-1/git-generator/resources/nginx-manifests
-        repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git
-        revision: main
-  template:
-    metadata:
-      name: '{{path.basename}}-application'
-    spec:
-      destination:
-        namespace: '{{path.basename}}-ns'
-        server: https://kubernetes.default.svc
-      project: default
+apiVersion: argoproj.io/v1alpha1		# ArgoCD এর কোন API version ব্যবহার হবে সেটা বলে।
+kind: ApplicationSet	# এটি একটি ApplicationSet resource। এটি automatically multiple applications তৈরি করতে পারবে।
+metadata:			# Resource এর basic information থাকে এখানে।
+  name: git-files-generator-ex1	#ApplicationSet এর নাম।এই নামে Kubernetes এ resource তৈরি হবে।  চেক করতে:  kubectl get applicationsets -n argocd
+  namespace: argocd	#ApplicationSet কোন namespace এ তৈরি হবে।ArgoCD সাধারণত argocd namespace এ থাকে।
+spec:				#এখানে ApplicationSet এর main configuration থাকে।
+  generators:		#কিভাবে apps generate হবে সেটা এখানে define করা হয়।
+  - git:			#এখানে Git Generator ব্যবহার করা হয়েছে। অর্থাৎ Git repository scan করে app তৈরি হবে।
+      repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git	#কোন GitHub repository scan করবে
+      revision: main	#কোন branch ব্যবহার করবে। এখানে main branch
+      files:		#এটি Git File Generator। নির্দিষ্ট file খুঁজে সেগুলোর data ব্যবহার করবে।
+      - path: v09-argocd-applicationSet-1/git-generator/cluster-config/**/config.json
+  template:			#**  মানে:সব subdirectory recursively search করো। প্রতিটি detected file থেকে কীভাবে app তৈরি হবে তার blueprint।
+    metadata:		#generated application এর metadata।
+      name: '{{cluster.name}}-application'	#config.json এর cluster.name value নিয়ে app name বানাবে। name": "pre-staging
+    spec:	#generated application এর configuration।
+      project: default		#ArgoCD এর কোন project এর মধ্যে app থাকবে।
       source:
-        path: '{{path}}'
         repoURL: https://github.com/nuruzzaman24x/argocd-zeroto-hero.git
         targetRevision: main
+        path: '{{cluster.path}}'		#config.json এর cluster.path value ব্যবহার করবে।
+      destination:				#কোথায় deploy হবে।
+        server: '{{cluster.address}}'	#যদি config.json এ থাকে:{"cluster":{"address": "https://172.17.0.1:6443"}}তাহলে ওই cluster এ deploy হবে।
+        namespace: '{{cluster.namespace}}'	#যদি config.json এ থাকে:{"cluster":{"namespace": "dev-ns"}} তাহলে deploy হবে
       syncPolicy:
         automated: {}
         syncOptions:
