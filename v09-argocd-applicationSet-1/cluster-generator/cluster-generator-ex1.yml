@@ -22,3 +22,5 @@ spec:
         automated: {}				#স্বয়ংক্রিয়ভাবে নতুন আপডেট সিঙ্ক করবে (মানুষের হস্তক্ষেপ লাগবে না)।
         syncOptions:
           - CreateNamespace=true		#যদি cluster-generator namespace না থাকে, তাহলে ArgoCD সেটি তৈরি করবে#
+
+##Template কেন use করি?  👉 Template হলো “একটা design” বা “blueprint”  মানে:  ApplicationSet কে বলে দেয় — “প্রতিটা cluster এর জন্য app কেমন হবে”  Simple real-life example  ধরো তোমার কাছে ৩টা cluster আছে:  dev staging production  এখন তুমি চাইতেছো — সব cluster এ একই nginx app deploy হবে।  তাহলে ApplicationSet কী করে? Generator  আগে cluster খুঁজে বের করে:  dev staging production তারপর Template use করে  Template বলে:  সব cluster এর জন্য এই design follow করো
